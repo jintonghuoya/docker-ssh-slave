@@ -35,6 +35,7 @@ RUN groupadd -g ${gid} ${group} \
     && useradd -d "${JENKINS_AGENT_HOME}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}"
 
 # setup SSH server
+RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
 RUN apt-get update \
     && apt-get install --no-install-recommends -y openssh-server \
     && rm -rf /var/lib/apt/lists/*
@@ -47,7 +48,7 @@ RUN sed -i /etc/ssh/sshd_config \
     mkdir /var/run/sshd
 
 # Install maven
-RUN apt-get install -y maven && \
+RUN apt-get install -no-install-recommends -y maven && \
     mkdir /home/jenkins/.m2
 # add maven settingsxml to image    
 ADD settings.xml /home/jenkins/.m2/
