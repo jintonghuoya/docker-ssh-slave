@@ -46,6 +46,12 @@ RUN sed -i /etc/ssh/sshd_config \
         -e 's/#LogLevel.*/LogLevel INFO/' && \
     mkdir /var/run/sshd
 
+# Install maven
+RUN apt-get install -y maven && \
+    mkdir /home/jenkins/.m2
+# add maven settingsxml to image    
+ADD settings.xml /home/jenkins/.m2/
+
 VOLUME "${JENKINS_AGENT_HOME}" "/tmp" "/run" "/var/run"
 WORKDIR "${JENKINS_AGENT_HOME}"
 
