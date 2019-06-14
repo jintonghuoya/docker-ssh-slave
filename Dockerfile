@@ -36,6 +36,7 @@ RUN groupadd -g ${gid} ${group} \
 
 # setup SSH server
 RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+RUN  apt-get clean
 RUN apt-get update \
     && apt-get install --no-install-recommends -y openssh-server \
     && rm -rf /var/lib/apt/lists/*
