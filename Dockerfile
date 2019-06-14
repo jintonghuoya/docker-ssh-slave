@@ -36,7 +36,8 @@ RUN groupadd -g ${gid} ${group} \
 
 # setup SSH server
 ADD sources.list /etc/apt/
-RUN apt-get update \
+RUN apt-get clean \
+    && apt-get update \
     && apt-get install --no-install-recommends -y openssh-client \
     && apt-get install --no-install-recommends -y openssh-sftp-server \
     && apt-get install --no-install-recommends -y openssh-server \
