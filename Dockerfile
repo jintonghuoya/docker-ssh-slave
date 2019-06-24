@@ -35,11 +35,9 @@ RUN groupadd -g ${gid} ${group} \
     && useradd -d "${JENKINS_AGENT_HOME}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}"
 
 # setup SSH server
-ADD sources.list /etc/apt/
-RUN apt-get clean \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y openssh-client \
-    && apt-get install --no-install-recommends -y openssh-sftp-server \
+RUN apt-get update \
+    && apt-get install -y vim \
+    && apt-get install -y maven \
     && apt-get install --no-install-recommends -y openssh-server \
     && rm -rf /var/lib/apt/lists/*
 RUN sed -i /etc/ssh/sshd_config \
@@ -50,11 +48,12 @@ RUN sed -i /etc/ssh/sshd_config \
         -e 's/#LogLevel.*/LogLevel INFO/' && \
     mkdir /var/run/sshd
 
-# Install maven
-RUN apt-get install -no-install-recommends -y maven && \
-    mkdir /home/jenkins/.m2
 # add maven settingsxml to image    
-ADD settings.xml /home/jenkins/.m2/
+ADD settings.xml /etc/maven/
+
+# add docker
+RUN apt-get update && \
+    apt-get install -y sshpass
 
 VOLUME "${JENKINS_AGENT_HOME}" "/tmp" "/run" "/var/run"
 WORKDIR "${JENKINS_AGENT_HOME}"
